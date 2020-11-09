@@ -1,5 +1,5 @@
 /*
- *  Piece_HashCode.java
+ *  BlackPawn_Create.java
  *
  *  chess383 is a collection of chess related utilities.
  *  Copyright (C) 2020 Jörg Dippel
@@ -17,36 +17,49 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package chess383.piece.abstraction;
+package chess383.piece.concretion.pawn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import chess383.piece.concretion.queen.Queen;
+import chess383.piece.abstraction.Piece;
 
 /**
  * <p>
- * The class Piece_HashCode implements an upper tester
+ * The class BlackPawn_Create implements an upper tester
  * </p>
  *
  * @author    Jörg Dippel
  * @version   September 2020
  *
  */
-@DisplayName("the public method int hashCode() for class Piece is tested")
-public class Piece_HashCode {    
+@DisplayName("the public static method BlackPawn create() for class BlackPawn is tested")
+public class BlackPawn_Create {    
     
     static { Piece.createBoard(); }
     
     @Test
-    @DisplayName("queens on same locations have the same hashCode")
-    public void compareSameTypesonSameLocation() {
+    @DisplayName("a pawn is created and it should be of type InitialBlackPawn")
+    public void Pawn_CreateInitialBlackPawn() {
         
-        final String LOCATION = "e4";
+        final String LOCATION = "e7";
         
-        assertThat( Queen.create( LOCATION ).hashCode() == Queen.create( LOCATION ).hashCode() ).as( "Queens on same locations have the same hashCode" ).isTrue();
+        Pawn pawn = BlackPawn.create( LOCATION );
+        
+        assertThat( pawn instanceof InitialBlackPawn ).as( "the method should return true for the correct instance" ).isTrue();
+    }
+    
+    @Test
+    @DisplayName("a pawn is created and it should be of type MovedBlackPawn")
+    public void Pawn_CreateMovedBlackPawn() {
+        
+        final String LOCATION = "e5";
+        
+        Pawn pawn = BlackPawn.create( LOCATION );
+        
+        assertThat( pawn instanceof MovedBlackPawn ).as( "the method should return true for the correct instance" ).isTrue();
     }
 }
 

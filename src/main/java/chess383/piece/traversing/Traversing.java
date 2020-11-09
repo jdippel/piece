@@ -23,8 +23,12 @@ package chess383.piece.traversing;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-import chess383.exception.Chess383Exception;
+import chess383.exception.PiecePlacementStringLocationsMissingException;
+import chess383.exception.PiecePlacementStringTooManyFreeLocationsException;
+import chess383.exception.PiecePlacementStringTooShortException;
+import chess383.exception.PiecePlacementStringUnsupportedPieceAbbreviationException;
 import chess383.piece.abstraction.Piece;
 import chess383.piece.abstraction.PieceFactory;
 
@@ -32,7 +36,7 @@ import chess383.piece.abstraction.PieceFactory;
  * Provides information about a collection of pieces.
  *
  * @author    Jörg Dippel
- * @version   August 2020
+ * @version   September 2020
  *
  */
 public class Traversing {
@@ -48,40 +52,41 @@ public class Traversing {
     /** ---------  Getter and Setter  ------------------------- */
    
     private void setFEN( String value )   { this.forsythEdwardsNotation = value; }
-    public String getFEN( )               { return( this.forsythEdwardsNotation ); }
+    private String getFEN( )              { return( this.forsythEdwardsNotation ); }
     
-    /** ------------------------------------------------------- */
+    /** ---------  Factory  ----------------------------------- */
     
-    public static List<List<Piece>> traversePieces( String forsythEdwardsNotation ) {
-    
-        return new Traversing( forsythEdwardsNotation ).getBothPieceCollections();
+    public static Traversing create(  String fen) {
+        
+        return new Traversing( fen );
     }
     
     /** ------------------------------------------------------- */
     
-    private List<List<Piece>> getBothPieceCollections() {
+    public List<Piece> getPieceCollection( Predicate<Character> isAssociated ) {
         
-        List<Piece> whitePlayerPieces = new ArrayList<Piece>();
-        List<Piece> blackPlayerPieces = new ArrayList<Piece>();
+        List<Piece> playerPieces = new ArrayList<Piece>();
         
         String pieceCollection = getFEN();
+        int pieceCollectionLength = pieceCollection.length();
         int counterForEmptyLocations = 0;
-        int cursor = 0;
         String location = "";
         char letter = ' ';
         
-        
-        cursor = 0;
+        int cursor = 0;
         Iterator<String> iterator = TraversingOrder.STANDARD.getInstance().iterator();
-        while( cursor < pieceCollection.length() ) {
+        while( cursor < pieceCollectionLength ) {
             letter = pieceCollection.charAt( cursor );
-
+            
             if( Character.isWhitespace( letter ) ) {
+                if( iterator.hasNext() ) {
+                    PiecePlacementStringTooShortException.throwPiecePlacementStringTooShortException( 
+                            String.format( "There are still locations defined for position %s but following pieces are detected: %s", getFEN(), playerPieces )); 
+                }
                 break;
             }
             else if( Character.isDigit( letter )) {
-                counterForEmptyLocations = Character.getNumericValue( letter );
-                cursor++;
+                counterForEmptyLocations = parseInt( pieceCollection.substring( cursor ) );
                 
                 while( counterForEmptyLocations > 0 ) {
                     counterForEmptyLocations--;
@@ -89,62 +94,46 @@ public class Traversing {
                         location = iterator.next();
                     }
                     else {
-                        throw new Chess383Exception( 
-                            String.format( "There are no more locations defined for input %s", pieceCollection ));
+                        PiecePlacementStringTooManyFreeLocationsException.throwPiecePlacementStringTooManyFreeLocationsException(
+                            String.format( "There are too many free locations defined for position %s but following pieces are detected: %s", getFEN(), playerPieces )); 
                     }
                 }
+                
+                while( cursor < pieceCollectionLength && Character.isDigit( pieceCollection.charAt( cursor  ) ) ) cursor++;
             }
-            else if( Character.isLetter( letter )){
-                // here a piece with fen 'letter' is found on location
-                Piece piece = null;
+            else if( Character.isLetter( letter ) ) {
                 if( iterator.hasNext() )  {
                     location = iterator.next();
-                }
-                else {
-                    throw new Chess383Exception( 
-                        String.format( "There are no more locations defined for input %s", pieceCollection ));
-                }
-                if( Character.isLowerCase( letter) ) {
-                    
-                    piece = PieceFactory.createPiece( location, letter );
-                    if( piece != null  ) {
-                        blackPlayerPieces.add( piece );
-                    }
-                    else {
-                        throw new Chess383Exception( 
-                                String.format( "Unsupported piece abbreviation for FEN with letter %c", letter ));
-                    }
-                }
-                else {
-                    piece = PieceFactory.createPiece( location, letter );
-                    if( piece != null  ) {
-                        whitePlayerPieces.add( piece );
-                    }
-                    else {
-                        throw new Chess383Exception( 
-                                String.format( "Unsupported piece abbreviation for FEN with letter %c", letter ));
-                    }
-                }
-                cursor++;
-            }
-            else {
-                cursor++;
-            }
-            
-        }
-        
-        if( iterator.hasNext() )  {
-            location = iterator.next();
-            throw new Chess383Exception( 
-                    String.format( "There are still locations defined for input %s but their definitions are missing starting for location %s",
-                        pieceCollection, location ));
+                    if( isAssociated.test( letter ) ) {
                         
+                        Piece piece = PieceFactory.createPiece( location, letter );
+                        if( piece != null  ) {
+                            playerPieces.add( piece );
+                        }
+                        else {
+                            PiecePlacementStringUnsupportedPieceAbbreviationException.throwPiecePlacementStringUnsupportedPieceAbbreviationException( 
+                                     String.format( "Unsupported piece abbreviation for FEN with letter %c", letter ));
+                        }
+                    }
+                }
+                else {
+                    PiecePlacementStringLocationsMissingException.throwPiecePlacementStringLocationsMissingException(
+                        String.format( "There are no more locations defined for position %s but following pieces are detected: %s", getFEN(), playerPieces )); 
+                }
+                cursor++;
+            }
+            else cursor++;
         }
         
+        if( iterator.hasNext() ) {
+        	PiecePlacementStringTooShortException.throwPiecePlacementStringTooShortException( 
+                    String.format( "There are still locations defined for position %s but following pieces are detected: %s", getFEN(), playerPieces )); 
+        }
         
-        List<List<Piece>> result = new ArrayList<List<Piece>>( 2 );
-        result.add( whitePlayerPieces );
-        result.add( blackPlayerPieces );
-        return result;
+        return playerPieces;
     }
+
+    private Integer parseInt( String description ) {
+        return Character.getNumericValue( description.charAt( 0 ) );
+    }   
 }

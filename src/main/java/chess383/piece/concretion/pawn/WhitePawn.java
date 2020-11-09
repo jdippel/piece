@@ -20,11 +20,16 @@
 
 package chess383.piece.concretion.pawn;
 
+import java.util.List;
+
+import chess383.piece.abstraction.PieceFactory;
+
+
 /**
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   September 2020
  *
  */
 public abstract class WhitePawn extends Pawn {
@@ -43,6 +48,15 @@ public abstract class WhitePawn extends Pawn {
     /** ---------  Getter and Setter  ------------------------- */
     
     // inherited
+    
+    /** ---------  Factory  ----------------------------------- */
+    
+    static private List<String> WHITE_PAWN_STARTING_RANG = PieceFactory.getRookLineContaining( "a2", "h2" );
+    
+    public static WhitePawn create( String location ) {
+        
+        return ( WHITE_PAWN_STARTING_RANG.contains( location ) ) ? InitialWhitePawn.create( location ) : MovedWhitePawn.create( location );
+    }
 
     /** ------------------------------------------------------- */
     

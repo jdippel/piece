@@ -24,10 +24,8 @@ import chess383.piece.concretion.bishop.Bishop;
 import chess383.piece.concretion.king.InitialKing;
 import chess383.piece.concretion.king.MovedKing;
 import chess383.piece.concretion.knight.Knight;
-import chess383.piece.concretion.pawn.InitialBlackPawn;
-import chess383.piece.concretion.pawn.InitialWhitePawn;
-import chess383.piece.concretion.pawn.MovedBlackPawn;
-import chess383.piece.concretion.pawn.MovedWhitePawn;
+import chess383.piece.concretion.pawn.BlackPawn;
+import chess383.piece.concretion.pawn.WhitePawn;
 import chess383.piece.concretion.queen.Queen;
 import chess383.piece.concretion.rook.Rook;
 
@@ -39,12 +37,9 @@ import java.util.Set;
  * Provides a piece according to the given parameters.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   September 2020
  */
 public class PieceFactory {
-
-    static private List<String> WHITE_PAWN_STARTING_RANG = getRookLineContaining( "a2", "h2" );
-    static private List<String> BLACK_PAWN_STARTING_RANG = getRookLineContaining( "a7", "h7" );
     
     public static Piece createPiece( String location, char fen, boolean alreadyMoved ) {
         
@@ -78,11 +73,11 @@ public class PieceFactory {
                       } break;
 
             case 'P': {
-                          result = ( alreadyMoved ) ? MovedWhitePawn.create( location ) : InitialWhitePawn.create( location );
+                          result = WhitePawn.create( location );
                       } break;
                      
             case 'p': {
-                          result = ( alreadyMoved ) ? MovedBlackPawn.create( location ) : InitialBlackPawn.create( location );
+                          result = BlackPawn.create( location );
                       } break;
         
             default: break;
@@ -93,13 +88,11 @@ public class PieceFactory {
     
     public static Piece createPiece( String location, char fen ) {
         
-        if( fen == 'P' ) return createPiece( location, fen, ! WHITE_PAWN_STARTING_RANG.contains( location ) );
-        else if( fen == 'p' ) return createPiece( location, fen, ! BLACK_PAWN_STARTING_RANG.contains( location ) );
-        else return createPiece( location, fen, true );
+        return createPiece( location, fen, true );
         
     }
 
-    private static List<String> getRookLineContaining( String origin, String anotherLocation ) {
+    public static List<String> getRookLineContaining( String origin, String anotherLocation ) {
         
         Rook rook = Rook.create( origin );
         Set<List<String>> lines = rook.getMovingLines();

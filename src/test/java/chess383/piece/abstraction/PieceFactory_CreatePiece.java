@@ -25,6 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess383.ICoordinateFactory;
+import chess383.piece.concretion.king.InitialKing;
+import chess383.piece.concretion.king.MovedKing;
 import chess383.piece.concretion.pawn.InitialBlackPawn;
 import chess383.piece.concretion.pawn.InitialWhitePawn;
 import chess383.piece.concretion.pawn.MovedBlackPawn;
@@ -36,7 +38,7 @@ import chess383.piece.concretion.pawn.MovedWhitePawn;
  * </p>
  *
  * @author    Jörg Dippel
- * @version   August 2020
+ * @version   September 2020
  *
  */
 @DisplayName("the public static method Piece createPiece() for class PieceFactory is tested")
@@ -95,6 +97,16 @@ public class PieceFactory_CreatePiece {
     }
     
     @Test
+    @DisplayName("for a white initial king the attibute king is confirmed")
+    public void creatWhiteInitialKingWithMoveAttribute_ButCheckingInstanceExplicitely() {
+        
+        final String LOCATION = "e1";
+        Piece piece = PieceFactory.createPiece( LOCATION, 'K', false );
+        
+        assertThat( piece instanceof InitialKing ).as( "should confirm the king instance" ).isTrue();
+    }
+    
+    @Test
     @DisplayName("for a white moved king the attibute king is confirmed")
     public void createWhiteMovedKing() {
         
@@ -112,6 +124,16 @@ public class PieceFactory_CreatePiece {
         Piece piece = PieceFactory.createPiece( LOCATION, 'K', true );
         
         assertThat( piece.isKing() ).as( "should confirm the king instance" ).isTrue();
+    }
+    
+    @Test
+    @DisplayName("for a white moved king the attibute king is confirmed")
+    public void createWhiteMovedKingWithMoveAttribute_ButCheckingInstanceExplicitely() {
+        
+        final String LOCATION = "e4";
+        Piece piece = PieceFactory.createPiece( LOCATION, 'K', true );
+        
+        assertThat( piece instanceof MovedKing ).as( "should confirm the king instance" ).isTrue();
     }
     
     @Test
@@ -202,6 +224,16 @@ public class PieceFactory_CreatePiece {
     }
     
     @Test
+    @DisplayName("for a black initial king the attibute king is confirmed")
+    public void creatBlackInitialKingWithMoveAttribute_ButCheckingInstanceExplicitely() {
+        
+        final String LOCATION = "e8";
+        Piece piece = PieceFactory.createPiece( LOCATION, 'k', false );
+        
+        assertThat( piece instanceof InitialKing ).as( "should confirm the king instance" ).isTrue();
+    }
+    
+    @Test
     @DisplayName("for a black moved king the attibute king is confirmed")
     public void createBlackMovedKing() {
         
@@ -219,6 +251,16 @@ public class PieceFactory_CreatePiece {
         Piece piece = PieceFactory.createPiece( LOCATION, 'k', true );
         
         assertThat( piece.isKing() ).as( "should confirm the king instance" ).isTrue();
+    }
+    
+    @Test
+    @DisplayName("for a black moved king the attibute king is confirmed")
+    public void createBlackMovedKingWithMoveAttribute_ButCheckingInstanceExplicitely() {
+        
+        final String LOCATION = "e4";
+        Piece piece = PieceFactory.createPiece( LOCATION, 'k', true );
+        
+        assertThat( piece instanceof MovedKing ).as( "should confirm the king instance" ).isTrue();
     }
     
     @Test

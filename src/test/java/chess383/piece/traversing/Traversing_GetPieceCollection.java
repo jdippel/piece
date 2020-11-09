@@ -1,5 +1,5 @@
 /*
- *  Traversing_TraversePieces.java
+ *  Traversing_GetPieceCollection.java
  *
  *  chess383 is a collection of chess related utilities.
  *  Copyright (C) 2020 Jörg Dippel
@@ -30,6 +30,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import chess383.ColorEnum;
 import chess383.ICoordinateFactory;
 import chess383.piece.abstraction.Piece;
 import chess383.piece.concretion.bishop.Bishop;
@@ -42,46 +43,41 @@ import chess383.piece.concretion.rook.Rook;
 
 /**
  * <p>
- * The class Traversing_TraversePieces transforms a Forsyth-Edwards-Notation into two lists of pieces.
+ * The class Traversing_GetPieceCollection transforms a Forsyth-Edwards-Notation into two lists of pieces.
  * </p>
  *
  * @author    Jörg Dippel
- * @version   August 2020
+ * @version   September 2020
  *
  */
-@DisplayName("the public static method List<List<Piece>> traversePieces( ) for class Traversing is tested")
-public class Traversing_TraversePieces {     
+@DisplayName("the public method List<Piece> getPieceCollection( ) for class Traversing is tested")
+public class Traversing_GetPieceCollection {     
     
-    @ParameterizedTest( name = "given a Forsyth-Edwards notation \"{0}\" two lists of pieces are generated" )
-    @MethodSource("stringAndListAndListProvider")
-    public void testWithMultiArgMethodSource_TraversingForsythEdwardsNotation( String forsythEdwardsNotation, List<Piece> whitePieces, List<Piece> blackPieces ) {
+	static { Piece.createBoard( ICoordinateFactory.STANDARD.get( ) ); }
+	
+    @ParameterizedTest( name = "given a Forsyth-Edwards notation \"{0}\" a piece list is generated" )
+    @MethodSource("stringAndColorAndListProvider")
+    public void testWithMultiArgMethodSource_TraversingForsythEdwardsNotation( String forsythEdwardsNotation, ColorEnum color, List<Piece> pieces ) {
         
-        Piece.createBoard( ICoordinateFactory.STANDARD.get( ) );
-        List<List<Piece>> bothPieceCollections = Traversing.traversePieces( forsythEdwardsNotation );
-       
-        List<Piece> whiteList = bothPieceCollections.get( 0 );
-        assertThat( whiteList.size() ).as("list structure must be of equal size").isEqualTo( whitePieces.size() );
-        for( Piece piece : whiteList ) {
-            assertThat( whitePieces ).as( "piece must be contained in named list" ).contains( piece );
-        }
-        
-        List<Piece> blackList = bothPieceCollections.get( 1 );
-        assertThat( blackList.size() ).as("list structure must be of equal size").isEqualTo( blackPieces.size() );
-        for( Piece piece : blackList ) {
-            assertThat( blackPieces ).as( "piece must be contained in named list" ).contains( piece );
+        List<Piece> pieceList = Traversing.create( forsythEdwardsNotation ).getPieceCollection( color.isOfWhiteColor() ? ch -> Character.isUpperCase( ch ) : ch -> Character.isLowerCase( ch ) );
+        assertThat( pieceList.size() ).as("list structure must be of equal size").isEqualTo( pieces.size() );
+        for( Piece piece : pieceList ) {
+            assertThat( pieces ).as( "piece must be contained in named list" ).contains( piece );
         }
     }
     
     
-    public static Stream<Arguments> stringAndListAndListProvider() {
+    public static Stream<Arguments> stringAndColorAndListProvider() {
         return Stream.of(
             
-            Arguments.of( "r3k2r/8/8/8/8/8/8/8", Arrays.asList(), Arrays.asList( Rook.create( "a8" ), InitialKing.create( "e8" ), Rook.create( "h8" ) ) )
-          , Arguments.of( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",  
+            Arguments.of( "r3k2r/8/8/8/8/8/8/8", ColorEnum.WHITE, Arrays.asList() )
+          , Arguments.of( "r3k2r/8/8/8/8/8/8/8", ColorEnum.BLACK, Arrays.asList( Rook.create( "a8" ), InitialKing.create( "e8" ), Rook.create( "h8" ) ))
+          , Arguments.of( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ColorEnum.WHITE,
         		  Arrays.asList(  InitialKing.create( "e1" ), Queen.create( "d1" ), Rook.create( "a1" ), Rook.create( "h1" ),
         	                Knight.create( "b1" ), Knight.create( "g1" ), Bishop.create( "c1" ), Bishop.create( "f1" ),
         	                InitialWhitePawn.create( "a2" ), InitialWhitePawn.create( "b2" ), InitialWhitePawn.create( "c2" ), InitialWhitePawn.create( "d2" ),
-        	                InitialWhitePawn.create( "e2" ), InitialWhitePawn.create( "f2" ), InitialWhitePawn.create( "g2" ), InitialWhitePawn.create( "h2" )),
+        	                InitialWhitePawn.create( "e2" ), InitialWhitePawn.create( "f2" ), InitialWhitePawn.create( "g2" ), InitialWhitePawn.create( "h2" ) ))
+          , Arguments.of( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ColorEnum.BLACK,
         		  Arrays.asList( InitialKing.create( "e8" ), Queen.create( "d8" ), Rook.create( "a8" ), Rook.create( "h8" ),
         	                Knight.create( "b8" ), Knight.create( "g8" ), Bishop.create( "c8" ), Bishop.create( "f8" ),
         	                InitialBlackPawn.create( "a7" ), InitialBlackPawn.create( "b7" ), InitialBlackPawn.create( "c7" ), InitialBlackPawn.create( "d7" ),

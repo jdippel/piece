@@ -20,11 +20,15 @@
 
 package chess383.piece.concretion.pawn;
 
+import java.util.List;
+
+import chess383.piece.abstraction.PieceFactory;
+
 /**
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   September 2020
  *
  */
 public abstract class BlackPawn extends Pawn {
@@ -44,13 +48,22 @@ public abstract class BlackPawn extends Pawn {
     
     // inherited
 
+    /** ---------  Factory  ----------------------------------- */
+    
+    static private List<String> BLACK_PAWN_STARTING_RANG = PieceFactory.getRookLineContaining( "a7", "h7" );
+    
+    public static BlackPawn create( String location ) {
+        
+        return ( BLACK_PAWN_STARTING_RANG.contains( location ) ) ? InitialBlackPawn.create( location ) : MovedBlackPawn.create( location );
+    }
+
     /** ------------------------------------------------------- */
 
     public MovedBlackPawn replace( String location ) { return MovedBlackPawn.create( location ); }
 
     @Override
-    public boolean isBlackPawn() { return true; }  // will be overwritten by black pawns
+    public boolean isPawn() { return true; }       // will be overwritten by pawns
     
     @Override
-    public String toString() { return( "initial black pawn: " + super.toString() ); }
+    public boolean isBlackPawn() { return true; }  // will be overwritten by black pawns
 }

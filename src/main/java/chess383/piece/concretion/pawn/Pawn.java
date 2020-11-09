@@ -31,7 +31,7 @@ import chess383.piece.dictionary.SmallDictionary;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   September 2020
  *
  */
 public abstract class Pawn extends Piece {
@@ -50,6 +50,13 @@ public abstract class Pawn extends Piece {
     /** ---------  Getter and Setter  ------------------------- */
     
     // inherited
+    
+    /** ---------  Factory  ----------------------------------- */
+        
+    public static Pawn create( ColorEnum color, String location ) {
+        
+        return ( ColorEnum.WHITE == color ) ? WhitePawn.create( location ) : BlackPawn.create( location );
+    }
     
     /** ------------------------------------------------------- */
     

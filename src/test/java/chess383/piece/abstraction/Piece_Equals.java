@@ -36,7 +36,7 @@ import chess383.piece.concretion.rook.Rook;
  * @version   September 2020
  *
  */
-@DisplayName("the protected static method boolean validateLocation() for class Piece is tested")
+@DisplayName("the public method boolean equals() for class Piece is tested")
 public class Piece_Equals {    
     
     static { Piece.createBoard(); }

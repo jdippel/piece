@@ -4,8 +4,8 @@
 
   <groupId>de.chess383</groupId>
   <artifactId>piece</artifactId>
-  <!-- version 1.2.0 == 1.1.25 -->
-  <version>1.2.0</version>
+  <!-- version 1.5.0 == 1.4.1 -->
+  <version>1.5.0</version>
   <packaging>jar</packaging>
   <description>chess piece definitions</description>
 
@@ -14,8 +14,8 @@
         <java.target.version>11</java.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <chess383.chessexception.version>1.0.1</chess383.chessexception.version>
-        <chess383.graph.version>5.2.0</chess383.graph.version>
+        <chess383.chessexception.version>1.1.0</chess383.chessexception.version>
+        <chess383.graph.version>5.4.0</chess383.graph.version>
   </properties>
 
   <dependencies>
@@ -210,7 +210,7 @@
          <name>Joerg Dippel</name>
          <email>chess383@jdippel.de</email>
          <roles>
-             <role>architect</role>
+             <role>leadership in definitions and design of fundamental concepts</role>
              <role>developer</role>
          </roles>
          <timezone>Europe/Berlin</timezone>
