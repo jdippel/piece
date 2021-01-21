@@ -2,7 +2,7 @@
  *  PieceFactory.java
  *
  *  chess383 is a collection of chess related utilities.
- *  Copyright (C) 2010-2020 Jörg Dippel
+ *  Copyright (C) 2010-2021 Jörg Dippel
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 package chess383.piece.abstraction;
 
+import chess383.exception.PiecePlacementStringUnsupportedPieceAbbreviationException;
 import chess383.piece.concretion.bishop.Bishop;
 import chess383.piece.concretion.king.InitialKing;
 import chess383.piece.concretion.king.MovedKing;
@@ -31,13 +32,14 @@ import chess383.piece.concretion.rook.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
  * Provides a piece according to the given parameters.
  *
  * @author    Jörg Dippel
- * @version   September 2020
+ * @version   January 2021
  */
 public class PieceFactory {
     
@@ -69,7 +71,7 @@ public class PieceFactory {
 
             case 'B':
             case 'b': {
-                          result = Bishop.create(location);
+                          result = Bishop.create( location );
                       } break;
 
             case 'P': {
@@ -84,6 +86,28 @@ public class PieceFactory {
         }
         
         return( result );
+    }
+    
+    public static Piece createPiece( String location, char fen, Locale language ) {
+        
+        Piece piece = Bishop.create( location );
+        if( Character.toUpperCase( piece.getType( language ).charAt( 0 ) ) == Character.toUpperCase( fen ) ) return piece;
+        
+        piece = Knight.create( location );
+        if( Character.toUpperCase( piece.getType( language ).charAt( 0 ) ) == Character.toUpperCase( fen ) ) return piece;
+        
+        piece = Rook.create( location );
+        if( Character.toUpperCase( piece.getType( language ).charAt( 0 ) ) == Character.toUpperCase( fen ) ) return piece;
+        
+        piece = Queen.create( location );
+        if( Character.toUpperCase( piece.getType( language ).charAt( 0 ) ) == Character.toUpperCase( fen ) ) return piece;
+        
+        piece = MovedKing.create( location );
+        if( Character.toUpperCase( piece.getType( language ).charAt( 0 ) ) == Character.toUpperCase( fen ) ) return piece;
+        
+        PiecePlacementStringUnsupportedPieceAbbreviationException.throwPiecePlacementStringUnsupportedPieceAbbreviationException( 
+                String.format( "Unsupported piece abbreviation for FEN with letter %c", fen ) );
+        return piece;
     }
     
     public static Piece createPiece( String location, char fen ) {
