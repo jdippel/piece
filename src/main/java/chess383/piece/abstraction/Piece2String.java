@@ -2,7 +2,7 @@
  *  Piece2String.java
  *
  *  chess383 is a collection of chess related utilities.
- *  Copyright (C) 2019, 2020 Jörg Dippel
+ *  Copyright (C) 2019 - 2021 Jörg Dippel
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,13 +20,16 @@
 
 package chess383.piece.abstraction;
 
+import java.util.Arrays;
+import java.util.Set;
+
 import chess383.graph.board.LineBundleMigration;
 
 /**
  * Provides a string description for an abstract chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   September 2021
  *
  */
 public class Piece2String {
@@ -66,10 +69,17 @@ public class Piece2String {
         return description.substring( movingStart, capturingStart - 1 ).trim();
     }
     
-     public static String extractCapturing( String description ) {
+    public static String extractCapturing( String description ) {
         
         int capturingStart = description.indexOf( getCapturingString() ) + getCapturingString().length();
         return description.substring( capturingStart ).trim();
+    }
+     
+    private static String homomorphicSetToUnique( Set<String> bundle ) {
+
+        String[] strings = bundle.toArray( new String[0] );
+        Arrays.sort( strings );
+        return String.join( " ", strings );
     }
     
     @Override
@@ -80,8 +90,8 @@ public class Piece2String {
         StringBuilder buffer = new StringBuilder();
         Piece describedPiece = getPiece();      
         buffer = buffer.append( getLocationString() + describedPiece.getLocation() + "\n" );
-        buffer.append( getMovingString() + LineBundleMigration.bulldoze( LineBundleMigration.flatten( describedPiece.getMovingLines() ) ) + "\n" );
-        buffer.append( getCapturingString() + LineBundleMigration.bulldoze( LineBundleMigration.flatten( describedPiece.getCapturingLines() ) ) + "\n" );
+        buffer.append( getMovingString() + homomorphicSetToUnique( LineBundleMigration.flatten( describedPiece.getMovingLines() ) ) + "\n" );
+        buffer.append( getCapturingString() + homomorphicSetToUnique( LineBundleMigration.flatten( describedPiece.getCapturingLines() ) ) + "\n" );
         
         return( buffer.toString() );
     }
