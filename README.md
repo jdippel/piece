@@ -5,7 +5,7 @@ This README documents a library for chess piece definitions.
 ### What is this repository for? ###
 
 * a library for chess piece definitions
-* Version 1.6.1
+* Version 1.6.3
 
 ### How do I get set up? ###
 
