@@ -27,7 +27,7 @@ import chess383.graph.direction.Direction;
  * Provides attributes for an abstract chess piece.
  *
  * @author    Jörg Dippel
- * @version   November 2019
+ * @version   November 2022
  *
  */
 public class PieceVector {
@@ -59,11 +59,6 @@ public class PieceVector {
     /** ---------  Factory  ----------------------------------- */
     
     public static PieceVector create( AdjacencyEnum attribute, Direction direction, int length ) {
-        
-        PieceVector result;
-        
-        result = new PieceVector( attribute, direction, length );
-        
-        return( result );
+        return new PieceVector( attribute, direction, length );
     }
 }

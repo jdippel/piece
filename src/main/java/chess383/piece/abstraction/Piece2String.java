@@ -21,9 +21,9 @@
 package chess383.piece.abstraction;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import chess383.graph.board.LineBundleMigration;
 
 /**
  * Provides a string description for an abstract chess piece.
@@ -75,9 +75,17 @@ public class Piece2String {
         return description.substring( capturingStart ).trim();
     }
      
-    private static String homomorphicSetToUnique( Set<String> bundle ) {
+    private static String homomorphicSetToUnique( Set<List<String>> bundle ) {
 
-        String[] strings = bundle.toArray( new String[0] );
+        Set<String> listToSimpleStringSet = new HashSet<String>( );
+
+        for( List<String> line : bundle ) {
+
+            String[] simpleString = line.toArray( new String[0] );
+            listToSimpleStringSet.add( String.join( " ", simpleString ) );
+        }
+
+        String[] strings = listToSimpleStringSet.toArray( new String[0] );
         Arrays.sort( strings );
         return String.join( " ", strings );
     }
@@ -89,9 +97,9 @@ public class Piece2String {
         
         StringBuilder buffer = new StringBuilder();
         Piece describedPiece = getPiece();      
-        buffer = buffer.append( getLocationString() + describedPiece.getLocation() + "\n" );
-        buffer.append( getMovingString() + homomorphicSetToUnique( LineBundleMigration.flatten( describedPiece.getMovingLines() ) ) + "\n" );
-        buffer.append( getCapturingString() + homomorphicSetToUnique( LineBundleMigration.flatten( describedPiece.getCapturingLines() ) ) + "\n" );
+        buffer = buffer.append(getLocationString()).append(describedPiece.getLocation()).append("\n");
+        buffer.append(getMovingString()).append(homomorphicSetToUnique(describedPiece.getMovingLines())).append("\n");
+        buffer.append(getCapturingString()).append(homomorphicSetToUnique(describedPiece.getCapturingLines())).append("\n");
         
         return( buffer.toString() );
     }

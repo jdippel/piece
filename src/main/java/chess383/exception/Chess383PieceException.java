@@ -36,7 +36,7 @@ public class Chess383PieceException extends Chess383Exception {
 	/**
      * Constructor creates a special exception
      */    
-    public Chess383PieceException( ) { }
+    public Chess383PieceException( ) {  super( ); }
     
     /**
      * Constructor creates a special exception

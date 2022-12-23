@@ -59,13 +59,6 @@ public abstract class Pawn extends Piece {
     }
     
     /** ------------------------------------------------------- */
-    
-    public Character getForsythEdwardsNotation() {
-        
-        return( 'p' );
-    }
- 
-    /** ------------------------------------------------------- */
 
     @Override
     public boolean isPawn() { return true; }  // will be overwritten by pawns

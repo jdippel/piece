@@ -29,7 +29,7 @@ import chess383.piece.abstraction.PieceVector;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   June 2020
+ * @version   November 2022
  *
  */
 public class MovedWhitePawn extends WhitePawn {
@@ -54,19 +54,19 @@ public class MovedWhitePawn extends WhitePawn {
     private static PieceVector[] MOVING_ATTRIBUTES() { 
         
         final int DISTANCE = 1;
-        
-        PieceVector[] result = new PieceVector[1];
-        result[0] = PieceVector.create( AdjacencyEnum.BY_EDGE, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), DISTANCE );
-        return( result );
+
+        return new PieceVector[] {
+                PieceVector.create( AdjacencyEnum.BY_EDGE, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), DISTANCE )
+        };
     }
     
     private static PieceVector[] CAPTURING_ATTRIBUTES() { 
         
         final int DISTANCE = 1;
-        
-        PieceVector[] result = new PieceVector[1];
-        result[0] = PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), DISTANCE );
-        return( result );
+
+        return new PieceVector[] {
+                PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), DISTANCE )
+        };
     }
     
     public static MovedWhitePawn create( String location ) {

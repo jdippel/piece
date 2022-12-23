@@ -26,11 +26,12 @@ import chess383.piece.concretion.king.InitialKing;
 import chess383.piece.concretion.king.MovedKing;
 import chess383.piece.concretion.knight.Knight;
 import chess383.piece.concretion.pawn.BlackPawn;
+import chess383.piece.concretion.pawn.Pawn;
 import chess383.piece.concretion.pawn.WhitePawn;
 import chess383.piece.concretion.queen.Queen;
 import chess383.piece.concretion.rook.Rook;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -39,7 +40,7 @@ import java.util.Set;
  * Provides a piece according to the given parameters.
  *
  * @author    Jörg Dippel
- * @version   January 2021
+ * @version   September 2021
  */
 public class PieceFactory {
     
@@ -112,8 +113,7 @@ public class PieceFactory {
     
     public static Piece createPiece( String location, char fen ) {
         
-        return createPiece( location, fen, true );
-        
+        return createPiece( location, fen, true );       
     }
 
     public static List<String> getRookLineContaining( String origin, String anotherLocation ) {
@@ -123,6 +123,17 @@ public class PieceFactory {
         for( List<String> line : lines ) {
             if( line.contains( anotherLocation )) return line;
         }
-        return new ArrayList<String>( 0 );
+        return Collections.emptyList();
+    }
+
+    public static boolean isPawnToBePromoted( String location, Piece piece ) {
+
+        if( piece instanceof Pawn ) {
+            Piece pawn = (Pawn) PieceFactory.createPiece( location, piece.getForsythEdwardsNotation() );
+            return pawn.getMovingLines().isEmpty() && pawn.getMovingLines().isEmpty();
+        }
+        else {
+            return false;
+        }
     }
 }

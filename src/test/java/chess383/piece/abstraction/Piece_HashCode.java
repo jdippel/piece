@@ -2,7 +2,7 @@
  *  Piece_HashCode.java
  *
  *  chess383 is a collection of chess related utilities.
- *  Copyright (C) 2020 Jörg Dippel
+ *  Copyright (C) 2020, 2021 Jörg Dippel
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import chess383.piece.concretion.queen.Queen;
  * </p>
  *
  * @author    Jörg Dippel
- * @version   September 2020
+ * @version   September 2021
  *
  */
 @DisplayName("the public method int hashCode() for class Piece is tested")
@@ -47,6 +47,16 @@ public class Piece_HashCode {
         final String LOCATION = "e4";
         
         assertThat( Queen.create( LOCATION ).hashCode() == Queen.create( LOCATION ).hashCode() ).as( "Queens on same locations have the same hashCode" ).isTrue();
+    }
+    
+    @Test
+    @DisplayName("queens on different locations should have different hashCodes")
+    public void compareSameTypesOnDifferentLocations() {
+        
+        final String LOCATION = "e4";
+        final String DIFFERENT_LOCATION = "b2";
+        
+        assertThat( Queen.create( LOCATION ).hashCode() == Queen.create( DIFFERENT_LOCATION ).hashCode() ).as( "Queens on different locations should have different hashCode" ).isFalse();
     }
 }
 

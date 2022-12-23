@@ -20,11 +20,7 @@
 
 package chess383.piece.abstraction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import chess383.ColorEnum;
 import chess383.ICoordinate;
@@ -36,11 +32,11 @@ import chess383.graph.direction.Direction;
  * Provides an abstract chess piece.
  *
  * @author    Jörg Dippel
- * @version   August 2020
+ * @version   November 2022
  *
  */
 public abstract class Piece {
-    
+
     /** ---------  Attributes  -------------------------------- */
     
     static private ICoordinate board = ICoordinateFactory.STANDARD.get( );
@@ -54,8 +50,6 @@ public abstract class Piece {
     protected Piece( String location ) {
         
         setLocation( location );
-        setMovingLines();
-        setCapturingLines();
     }
     
     /** ---------  Getter and Setter  ------------------------- */
@@ -65,8 +59,6 @@ public abstract class Piece {
     
     private void setLocation( String value )                     { this.location = value; }
     public String getLocation( )                                 { return( this.location ); }
-    private void setMovingLines( )                               { setMovingLines( new HashSet<>() ); }
-    private void setCapturingLines( )                            { setCapturingLines( new HashSet<>() ); }
     protected void setMovingLines( Set<List<String>> value )     { this.moving = value; }
     public Set<List<String>> getMovingLines( )                   { return( this.moving ); }
     protected void setCapturingLines( Set<List<String>> value )  { this.capturing = value; }
@@ -101,73 +93,56 @@ public abstract class Piece {
     public abstract String getSymbol();
     
     /** ------------------------------------------------------- */
-    
+
+    private Set<List<String>> createLines( String location, AdjacencyEnum attribute, Direction direction ) {
+        return  getBoard().getLineBundles( location, direction, attribute );
+    }
+
+    private Set<List<String>> createClippedLines( PieceVector attribute ) {
+        return clipLines( createLines( location, attribute.getAttribute(), attribute.getDirection() ), attribute.getLength() );
+    }
+
+    private Set<List<String>> createLines( PieceVector[] attributes ) {
+
+        if( ! validateLocation( location ) ) return Collections.emptySet();
+
+        Set<List<String>> result = new HashSet<>();
+        for( PieceVector attribute : attributes ) {
+            result.addAll( createClippedLines( attribute ) );
+        }
+        return result;
+    }
+
     protected void addMovingLines( PieceVector[] attributes ) {
-        
-        if( validateLocation( location ) ) {
-            for( PieceVector attribute : attributes ) {
-                setMovingLines( mergeLines( getMovingLines(), clipLines( createLines( location, attribute.getAttribute(), attribute.getDirection() ), attribute.getLength() ) ) );
-            }
-        }
+        setMovingLines( createLines( attributes ) );
     }
-    
+
     protected void addCapturingLines( PieceVector[] attributes ) {
-        
-        if( validateLocation( location ) ) {
-            for( PieceVector attribute : attributes ) {
-                setCapturingLines( mergeLines( getCapturingLines(), clipLines( createLines( location, attribute.getAttribute(), attribute.getDirection() ), attribute.getLength() ) ) );
-            }
-        }
+        setCapturingLines( createLines( attributes )  );
     }
-    
-    protected Set<List<String>> createLines( String location, AdjacencyEnum attribute, Direction direction ) {
-        
-        Set<List<String>> result;
-        
-        result = getBoard().getLineBundles( location, direction, attribute );
 
-        return( result );
+
+    private List<String> clipLine( List<String> line, int spread ) {
+        return ( line.size() <= spread ) ? line : line.subList( 0, spread );
     }
-    
+
+    private Set<List<String>> clipLinesWithPositiveSpread( Set<List<String>> lines, int spread ) {
+
+        // ( spread > 0 )
+        Set<List<String>> result = new HashSet<List<String>>();
+        for( List<String> line : lines ) {
+            result.add( clipLine( line, spread + 1 ) );
+        }
+        return result;
+    }
+
     protected Set<List<String>> clipLines( Set<List<String>> lines, int spread ) {
-        
-        Set<List<String>> result;
-
-        if ( spread > 0 ) {
-            result = new HashSet<List<String>>();
-            for( List<String> line : lines ) {
-                if ( line.size() <= spread + 1 ) {
-                    result.add( line );
-                }
-                else {
-                    List<String> newLine = new ArrayList<>( spread + 1 );
-                    for ( int cursor = 0; cursor <= spread; cursor++ ) {
-                        newLine.add( line.get( cursor ) );
-                    }
-                    result.add( newLine );
-                }
-            }
-        }
-        else {
-            // do nothing: pass through
-            result = lines;
-        }
-
-        return( result );
-    }
-    
-    protected Set<List<String>> mergeLines( Set<List<String>> lines, Set<List<String>> addedLines ) {
-        
-        for( List<String> line : addedLines ) {
-            lines.add( line );
-        }
-        return( lines );
+        return ( spread > 0 ) ? clipLinesWithPositiveSpread( lines, spread ) : lines ;
     }
 
     /** ------------------------------------------------------- */
     
     protected static boolean validateLocation( String location ) {
-        
         return ( location != null ) && getBoard().getAllLocations().contains( location );
     }
     
@@ -182,20 +157,17 @@ public abstract class Piece {
     
     @Override
     public String toString() {
-
         return new Piece2String( this ).toString();
     }
-    
+
+    private boolean isMeaningfullyEquivalent( Piece piece ) {
+        return( getLocation().compareTo( piece.getLocation() ) == 0
+                && getForsythEdwardsNotation() == piece.getForsythEdwardsNotation() );
+    }
+
     @Override
     public boolean equals( Object object ) {
-        if( object instanceof Piece ) {
-            Piece piece = ( Piece )object;
-            return( getLocation().compareTo( piece.getLocation() ) == 0 
-                 && getForsythEdwardsNotation() == piece.getForsythEdwardsNotation() );
-        }
-        else {
-            return false;
-        }
+        return ( object instanceof Piece ) && isMeaningfullyEquivalent( ( Piece )object );
     }
     
     @Override

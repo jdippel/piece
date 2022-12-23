@@ -34,7 +34,7 @@ import chess383.piece.dictionary.SmallDictionary;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   November 2022
  *
  */
 public class Knight extends Piece {
@@ -60,9 +60,9 @@ public class Knight extends Piece {
         
         final int ADJACENT = 1;
         
-        PieceVector[] result = new PieceVector[1];
-        result[0] = PieceVector.create( AdjacencyEnum.UNSPECIFIED, Direction.createBidirectionalDirection(), ADJACENT );
-        return( result );
+        return new PieceVector[] {
+                PieceVector.create(AdjacencyEnum.UNSPECIFIED, Direction.createBidirectionalDirection(), ADJACENT)
+        };
     }
     
     public static Knight create( String location ) {

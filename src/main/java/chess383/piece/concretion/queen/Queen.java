@@ -34,7 +34,7 @@ import chess383.piece.dictionary.SmallDictionary;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   November 2022
  *
  */
 public class Queen extends Piece {
@@ -60,13 +60,13 @@ public class Queen extends Piece {
         
         final int UNLIMITED = 0;
         
-        PieceVector[] result = new PieceVector[5];
-        result[0] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createBidirectionalDirection(), UNLIMITED );
-        result[1] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), UNLIMITED );
-        result[2] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), UNLIMITED );
-        result[3] = PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), UNLIMITED );
-        result[4] = PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), UNLIMITED );
-        return( result );
+        return new PieceVector[] {
+                PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createBidirectionalDirection(), UNLIMITED ),
+                PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), UNLIMITED ),
+                PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), UNLIMITED ),
+                PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), UNLIMITED ),
+                PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), UNLIMITED )
+        };
     }
     
     public static Queen create( String location ) {

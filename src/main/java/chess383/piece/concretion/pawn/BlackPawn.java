@@ -28,7 +28,7 @@ import chess383.piece.abstraction.PieceFactory;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   September 2020
+ * @version   November 2022
  *
  */
 public abstract class BlackPawn extends Pawn {
@@ -57,12 +57,13 @@ public abstract class BlackPawn extends Pawn {
         return ( BLACK_PAWN_STARTING_RANG.contains( location ) ) ? InitialBlackPawn.create( location ) : MovedBlackPawn.create( location );
     }
 
+    public static Character getStaticForsythEdwardsNotation() { return( 'p' ); }
     /** ------------------------------------------------------- */
 
     public MovedBlackPawn replace( String location ) { return MovedBlackPawn.create( location ); }
 
     @Override
-    public boolean isPawn() { return true; }       // will be overwritten by pawns
+    public Character getForsythEdwardsNotation() { return getStaticForsythEdwardsNotation(); }
     
     @Override
     public boolean isBlackPawn() { return true; }  // will be overwritten by black pawns

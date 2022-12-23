@@ -29,7 +29,7 @@ import chess383.piece.abstraction.PieceFactory;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   September 2020
+ * @version   November 2022
  *
  */
 public abstract class WhitePawn extends Pawn {
@@ -58,13 +58,15 @@ public abstract class WhitePawn extends Pawn {
         return ( WHITE_PAWN_STARTING_RANG.contains( location ) ) ? InitialWhitePawn.create( location ) : MovedWhitePawn.create( location );
     }
 
+    public static Character getStaticForsythEdwardsNotation() { return( 'P' ); }
+
     /** ------------------------------------------------------- */
     
     public MovedWhitePawn replace( String location ) { return MovedWhitePawn.create( location ); }
 
     @Override
-    public boolean isPawn() { return true; }       // will be overwritten by pawns
+    public Character getForsythEdwardsNotation() { return getStaticForsythEdwardsNotation(); }
     
     @Override
-    public boolean isWhitePawn() {return true; }   // will be overwritten by white pawns
+    public boolean isWhitePawn() { return true; }   // will be overwritten by white pawns
 }

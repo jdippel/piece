@@ -29,7 +29,7 @@ import chess383.piece.abstraction.PieceVector;
  * Provides a chess piece.
  *
  * @author    Jörg Dippel
- * @version   July 2020
+ * @version   November 2022
  *
  */
 public class MovedKing extends King {
@@ -54,14 +54,14 @@ public class MovedKing extends King {
     static PieceVector[] ATTRIBUTES() { 
         
         final int ADJACENT = 1;
-        
-        PieceVector[] result = new PieceVector[5];
-        result[0] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createBidirectionalDirection(), ADJACENT );
-        result[1] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), ADJACENT );
-        result[2] = PieceVector.create( AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), ADJACENT );
-        result[3] = PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.WHITE, ColorEnum.BLACK ), ADJACENT );
-        result[4] = PieceVector.create( AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection( ColorEnum.BLACK, ColorEnum.WHITE ), ADJACENT );
-        return( result );
+
+        return new PieceVector[] {
+                PieceVector.create(AdjacencyEnum.BY_EDGE,  Direction.createBidirectionalDirection(), ADJACENT),
+                PieceVector.create(AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection(ColorEnum.WHITE, ColorEnum.BLACK), ADJACENT),
+                PieceVector.create(AdjacencyEnum.BY_EDGE,  Direction.createUnidirectionalDirection(ColorEnum.BLACK, ColorEnum.WHITE), ADJACENT),
+                PieceVector.create(AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection(ColorEnum.WHITE, ColorEnum.BLACK), ADJACENT),
+                PieceVector.create(AdjacencyEnum.BY_POINT, Direction.createUnidirectionalDirection(ColorEnum.BLACK, ColorEnum.WHITE), ADJACENT)
+        };
     }
     
     public static MovedKing create( String location ) {
